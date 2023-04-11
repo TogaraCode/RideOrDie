@@ -5,7 +5,7 @@ const c= canvas.getContext('2d')
 canvas.width = innerWidth
 canvas.height = innerHeight
 
-const gravity = 15.5
+const gravity = 1.5
 
 class Player {
     constructor(){
@@ -23,7 +23,7 @@ class Player {
         }
 
       draw(){
-          c.fillStyle = 'green'
+          c.fillStyle = '#539460'
           c.fillRect(this.position.x, this.
             position.y, this.width, this.height)
       }
@@ -32,10 +32,11 @@ class Player {
         this.draw()
         this.position.y += this.velocity.y
 
-        if (this.position.y + this.height + this.velocity.y <= canvas.height) this.velocity.y += gravity}
-          
-    
-
+        if (this.position.y + this.height + this.velocity.y <= canvas.height)
+         this.velocity.y += gravity
+          else this.velocity.y = 0
+             
+      }
 }
 
 const player = new Player()
