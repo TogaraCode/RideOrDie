@@ -52,3 +52,25 @@ function animate () {
 
 
 animate()
+
+window.addEventListener('keydown', ({keyCode}) => {
+   // console.log(keyCode)
+    switch (keyCode) {
+        case 38:
+            console.log('Up')
+            player.velocity.y -= 20
+            break
+
+            case 39:
+                console.log('Right')
+                break
+
+                case 37:
+                    console.log('Left')
+                    break
+
+                    case 40:
+                    console.log('Down')
+                    break
+    }
+})
