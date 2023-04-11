@@ -42,7 +42,28 @@ class Player {
       }
 }
 
+class Platform {
+    constructor() {
+         this.position = {
+             x:10,
+             y:20
+         }
+         this.width = 200
+         this.width = 20
+    }
+
+    draw() {
+        c.fillStyle = 'blue'
+        c.fillRect(this.position.x, 
+                this.position.y, 
+                this.width, 
+                this.height)
+    }
+}
+
 const player = new Player()
+const platform = new Platform()
+
 const keys = {
     right: {
         pressed:false
@@ -63,6 +84,7 @@ function animate () {
     requestAnimationFrame(animate)
     c.clearRect(0, 0, canvas.width, canvas.height)
     player.update()
+    platform.draw()
 
     if (keys.right.pressed) {
         player.velocity.x = 5
