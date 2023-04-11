@@ -6,6 +6,7 @@ canvas.height = innerHeight
 
 const gravity = 1.5
 
+
 class Player {
     constructor(){
             this.position = {
