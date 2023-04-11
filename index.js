@@ -20,6 +20,7 @@ class Player {
 
             this.width =50
             this.height = 50 
+            
         }
 
       draw(){
@@ -59,6 +60,7 @@ class Platform {
                 this.position.y, 
                 this.width, 
                 this.height)
+                
     }
 }
 
