@@ -1,5 +1,4 @@
-
-const canvas = document.querySelector('canvas')
+const canvas = document.querySelector('canvas' )
 const c = canvas.getContext('2d')
 
 canvas.width = innerWidth
@@ -8,30 +7,39 @@ canvas.height = innerHeight
 const gravity = 1.5
 
 
+
+
+
+
+const avatarImage = new Image();
+avatarImage.src = '../public/img/alien.png'
+
+let avatarImageX = 0;
+let avatarImageY = 0;
+
+
+
+
 class Player {
     constructor(){
         
             this.position = {
-                x:1500,
-                y:100
+                x:0,
+                y:0
         }
             this.velocity = {
                 x:0,
                 y:0
             }
 
-            this.width =50
-            this.height = 50 
-        
+            this.width =5
+            this.height = 5,
+            this.avatarImage = (avatarImage)
         
         }
 
-      draw(){
-        c.fillStyle = '#539460'
-        c.fillRect(this.position.x, 
-            this.position.y, 
-            this.width, 
-            this.height)
+      draw() {
+      c.drawImage(this.avatarImage, this.position.x, this.position.y)
       }
 
       update(){
@@ -50,11 +58,11 @@ class Player {
 class Platform {
     constructor() {
          this.position = {
-             x:10,
-             y:20
+             x:0,
+             y:0
          }
-         this.width = 200
          this.width = 20
+         this.height = 20
     }
 
     draw() {
@@ -65,11 +73,6 @@ class Platform {
                 this.height)
     }
 }
-
-
-
-const player = new Player()
-const platform = new Platform()
 
 const keys = {
     right: {
@@ -86,6 +89,8 @@ const keys = {
     },
 }
 
+const player = new Player();
+const platform = new Platform();
 
 function animate () {
     requestAnimationFrame(animate)
@@ -105,51 +110,51 @@ function animate () {
 animate()
 
 addEventListener('keydown', ({keyCode}) => {
-   // console.log(keyCode)
+ 
     switch (keyCode) {
         case 38:
-            console.log('up')
+            
             player.velocity.y -= 15
             break
 
             case 39:
-                console.log('right')
+              
                 keys.right.pressed = true
                 break
 
                 case 37:
-                    console.log('left')
+                    
                     keys.left.pressed = true
                     break
 
                     case 40:
-                    console.log('down')
+                
                     keys.down.pressed = true
                     break
     }
 })
 addEventListener('keyup', ({keyCode}) => {
-    // console.log(keyCode)
+    
      switch (keyCode) {
          case 38:
-             console.log('up')
+             
              player.velocity.y -= 15
              break
  
              case 39:
-                 console.log('right')
+                 
                  keys.right.pressed = false
                  break
  
                  case 37:
-                     console.log('left')
+     
                      keys.left.pressed = false
                      break
  
                      case 40:
-                     console.log('down')
+                     
                      keys.down.pressed = false
                      break
      }
-     //console.log(keys.right.pressed)
+    
  })
