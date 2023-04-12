@@ -1,3 +1,4 @@
+
 const canvas = document.querySelector('canvas')
 const c = canvas.getContext('2d')
 
@@ -9,8 +10,9 @@ const gravity = 1.5
 
 class Player {
     constructor(){
+        
             this.position = {
-                x:100,
+                x:1500,
                 y:100
         }
             this.velocity = {
@@ -20,12 +22,13 @@ class Player {
 
             this.width =50
             this.height = 50 
-            
+        
+        
         }
 
       draw(){
-          c.fillStyle = '#539460'
-          c.fillRect(this.position.x, 
+        c.fillStyle = '#539460'
+        c.fillRect(this.position.x, 
             this.position.y, 
             this.width, 
             this.height)
@@ -60,9 +63,10 @@ class Platform {
                 this.position.y, 
                 this.width, 
                 this.height)
-                
     }
 }
+
+
 
 const player = new Player()
 const platform = new Platform()
