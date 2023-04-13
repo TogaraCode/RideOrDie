@@ -72,8 +72,8 @@ function init() {
   
     let platforms = [
       new Platform({
-        x: 40,
-        y: 40,
+        x: 200,
+        y: 200,
         image: platformImage
       }),
       new Platform({
