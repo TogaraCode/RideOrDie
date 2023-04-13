@@ -1,35 +1,37 @@
 const canvas = document.querySelector('canvas' )
 const c = canvas.getContext('2d')
 
-canvas.width = innerWidth
-canvas.height = innerHeight
+canvas.width = 1024
+canvas.height = 576
 
 const gravity = 1
 
 const avatarImage = new Image();
-avatarImage.src = '../public/img/alien.png';
+avatarImage.src = '../public/img/alien.png'
 
+const jetImage = new Image();
+jetImage.src = '../public/img/soloSpaceJet3d.png'
 
 class Player {
     constructor(){
-
+        
             this.position = {
                 x:100,
-                y:100,
+                y:100
         }
             this.velocity = {
                 x:0,
                 y:0
-            }
+            },
 
-            this.width = 30,
-            this.height = 30,
+            this.width = 300
+            this.height = 300
             this.avatarImage = (avatarImage)
            
-        }
+        };
 
       draw() {
-      c.drawImage(this.avatarImage, this.position.x, this.position.y, 1000, 1000)
+      c.drawImage(this.avatarImage, this.position.x, this.position.y, this.width, this.height)
       }
 
       update(){
@@ -51,19 +53,18 @@ class Player {
 class Platform {
     constructor() {
          this.position = {
-             x:300,
+             x:600,
              y:200
          }
          this.width = 200,
          this.height = 150
+         
+         this.jetImage = (jetImage)
     }
 
     draw() {
-        c.fillStyle = 'blue'
-        c.fillRect(this.position.x, 
-                this.position.y, 
-                this.width, 
-                this.height)
+       
+        c.drawImage(this.jetImage, this.position.x, this.position.y, this.width, this.height)  
     }
 }
 
@@ -101,12 +102,11 @@ if (keys.right.pressed) {
 } else player.velocity.x = 0
 
 if (player.position.y + player.height <= 
-    platform.position.y && player.position.y +player.velocity.y 
+    platform.position.y && player.position.y + player.velocity.y 
     >= platform.position) {
     player.velocity.y = 0 
 }
 }
-
 
 animate()
 
@@ -114,22 +114,23 @@ addEventListener('keydown', ({keyCode}) => {
  
     switch (keyCode) {
         case 38:
+            console.log('up')
             keys.up.pressed = true
-            player.velocity.y -= 15
+            player.velocity.y -= 25
             break
 
             case 39:
-              
+                console.log('right')
                 keys.right.pressed = true
                 break
 
                 case 37:
-                    
+                    console.log('left')
                     keys.left.pressed = true
                     break
 
                     case 40:
-                
+                        console.log('down')
                     keys.down.pressed = true
                     break
     }
