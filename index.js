@@ -4,65 +4,58 @@ const c = canvas.getContext('2d')
 canvas.width = innerWidth
 canvas.height = innerHeight
 
-const gravity = 1.5
-
-
-
-
-
+const gravity = 1
 
 const avatarImage = new Image();
-avatarImage.src = '../public/img/alien.png'
-
-let avatarImageX = 0;
-let avatarImageY = 0;
-
-
+avatarImage.src = '../public/img/alien.png';
 
 
 class Player {
     constructor(){
-        
+
             this.position = {
-                x:0,
-                y:0
+                x:100,
+                y:100,
         }
             this.velocity = {
                 x:0,
                 y:0
             }
 
-            this.width =5
-            this.height = 5,
+            this.width = 30,
+            this.height = 30,
             this.avatarImage = (avatarImage)
-        
+           
         }
 
       draw() {
-      c.drawImage(this.avatarImage, this.position.x, this.position.y)
+      c.drawImage(this.avatarImage, this.position.x, this.position.y, 1000, 1000)
       }
 
       update(){
             this.draw()
-            this.position.x += this.velocity.x
             this.position.y += this.velocity.y
 
         if (this.position.y + this.height + 
             this.velocity.y <= canvas.height)
             this.velocity.y += gravity
-    else    this.velocity.y = 0
+    else    
+    this.velocity.y = 0
              
       }
 }
 
+
+
+
 class Platform {
     constructor() {
          this.position = {
-             x:0,
-             y:0
+             x:300,
+             y:200
          }
-         this.width = 20
-         this.height = 20
+         this.width = 200,
+         this.height = 150
     }
 
     draw() {
@@ -73,6 +66,9 @@ class Platform {
                 this.height)
     }
 }
+
+const player = new Player();
+const platform = new Platform();
 
 const keys = {
     right: {
@@ -89,8 +85,7 @@ const keys = {
     },
 }
 
-const player = new Player();
-const platform = new Platform();
+
 
 function animate () {
     requestAnimationFrame(animate)
@@ -98,12 +93,18 @@ function animate () {
     player.update()
     platform.draw()
 
-    if (keys.right.pressed) {
-        player.velocity.x = 5
-    } else if (keys.left.pressed){
-        player.velocity.x = -5
-    }
-    else player.velocity.x = 0
+
+if (keys.right.pressed) {
+    player.velocity.x = 5
+} else if  (keys.left.pressed) {
+    player.velocity.x = -5 
+} else player.velocity.x = 0
+
+if (player.position.y + player.height <= 
+    platform.position.y && player.position.y +player.velocity.y 
+    >= platform.position) {
+    player.velocity.y = 0 
+}
 }
 
 
@@ -113,7 +114,7 @@ addEventListener('keydown', ({keyCode}) => {
  
     switch (keyCode) {
         case 38:
-            
+            keys.up.pressed = true
             player.velocity.y -= 15
             break
 
@@ -138,7 +139,7 @@ addEventListener('keyup', ({keyCode}) => {
      switch (keyCode) {
          case 38:
              
-             player.velocity.y -= 15
+             player.velocity.y -= 10
              break
  
              case 39:
