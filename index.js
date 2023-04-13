@@ -1,16 +1,16 @@
 const canvas = document.querySelector('canvas' )
 const c = canvas.getContext('2d')
 
-canvas.width = 1024
-canvas.height = 576
+canvas.width = innerWidth
+canvas.height = innerHeight
 
 const gravity = 1
 
 const avatarImage = new Image();
 avatarImage.src = '../public/img/alien.png'
 
-const jetImage = new Image();
-jetImage.src = '../public/img/soloSpaceJet3d.png'
+const platform = new Image();
+platform.src = '../public/img/soloSpaceJet3d.png'
 
 class Player {
     constructor(){
@@ -24,14 +24,13 @@ class Player {
                 y:0
             },
 
-            this.width = 300
-            this.height = 300
-            this.avatarImage = (avatarImage)
-           
+            this.width = 30
+            this.height = 30
+            this.image = createImage(avatarImage)
         };
 
       draw() {
-      c.drawImage(this.avatarImage, this.position.x, this.position.y, this.width, this.height)
+      c.drawImage(this.image, this.position.x, this.position.y, this.width, this.height)
       }
 
       update(){
@@ -51,25 +50,50 @@ class Player {
 
 
 class Platform {
-    constructor() {
+    constructor({x, y, image}) {
          this.position = {
-             x:600,
-             y:200
+             x,
+             y
          }
-         this.width = 200,
-         this.height = 150
+         this.image =image
+         this.width = image.width
+         this.height= image.height
+        
          
-         this.jetImage = (jetImage)
+         this.image  = image
     }
-
+;
     draw() {
-       
-        c.drawImage(this.jetImage, this.position.x, this.position.y, this.width, this.height)  
+        c.drawImage(this.image, this.position.x, this.position.y, this.width, this.height)  
     }
 }
 
-const player = new Player();
-const platform = new Platform();
+function createImage(imageSrc){
+    const image = new Image()
+    image.src = imageSrc
+    return image
+}
+
+function init() {
+    const platformImage = createImage(platform)
+
+
+
+const image = new Image()
+image.src = platform
+console.log(image)
+
+const player = new Player()
+const platforms = [new Platform({
+    x:200,
+    y: 100,
+    image: platformImage
+}),
+new platform({x:platformImage.width -3, y: 470,image: platformImage}),
+new platform({x:platformImage.width *2 +100, y: 470, image: platformImage})
+]
+}
+
 
 const keys = {
     right: {
@@ -87,30 +111,52 @@ const keys = {
 }
 
 
-
-function animate () {
+function animate() {
     requestAnimationFrame(animate)
     c.clearRect(0, 0, canvas.width, canvas.height)
+    
+    platforms.forEach((platform) => {
+        platform.draw()
+    })
     player.update()
-    platform.draw()
-
-
+    if (keys.right.pressed && player.position.x < 400) {
+        player.velocity.x = 5
+    } else if (keys.left.pressed && player.position.x > 100) {
+        player.velocity.x = -5
+    } else {
+        player.velocity.x = 0
+    
 if (keys.right.pressed) {
-    player.velocity.x = 5
+    scrollOffset += 5
+    platforms.forEach((platform)  => {
+        platform.position.x -= 5
+    })
 } else if  (keys.left.pressed) {
-    player.velocity.x = -5 
-} else player.velocity.x = 0
+    platforms.forEach((platform) => {
+        platform.position.x += 5
+    })
+}
 
-if (player.position.y + player.height <= 
-    platform.position.y && player.position.y + player.velocity.y 
-    >= platform.position) {
+
+platforms.forEach((platform) => {
+    if (player.position.y + player.height <= 
+    platform.position.y && player.position.y + player.height + player.velocity.y && player.position.x + player.width  
+    >= platform.position && player.position.x <= platform.position.x + platform.width) {
     player.velocity.y = 0 
 }
+})
+
+if (scrollOffset > platformImage.width * 5 + 300 - 2 ) {
+    console.log('you win')
 }
 
+if (player.position.y > canvas.height) {
+    init()
+}}
+init()
 animate()
 
-addEventListener('keydown', ({keyCode}) => {
+addEventListener('keydown', ({ keyCode }) => {
  
     switch (keyCode) {
         case 38:
@@ -122,6 +168,7 @@ addEventListener('keydown', ({keyCode}) => {
             case 39:
                 console.log('right')
                 keys.right.pressed = true
+                
                 break
 
                 case 37:
@@ -137,26 +184,24 @@ addEventListener('keydown', ({keyCode}) => {
 })
 addEventListener('keyup', ({keyCode}) => {
     
-     switch (keyCode) {
-         case 38:
-             
-             player.velocity.y -= 10
-             break
- 
-             case 39:
-                 
-                 keys.right.pressed = false
-                 break
- 
-                 case 37:
-     
-                     keys.left.pressed = false
-                     break
- 
-                     case 40:
-                     
-                     keys.down.pressed = false
-                     break
-     }
+    switch (keyCode) {
+        case 38:
+            
+            player.velocity.y -= 20
+            break
+
+            case 39:
+                
+                keys.right.pressed = false
+                break
+
+                case 37:
     
- })
+                    keys.left.pressed = false
+                    break
+
+                    case 40:
+                    
+                    keys.down.pressed = false
+                    break
+    }})}
