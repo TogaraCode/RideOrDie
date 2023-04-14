@@ -1,4 +1,4 @@
-const canvas = document.querySelector('canvas' )
+const canvas = document.querySelector('canvas')
 const c = canvas.getContext('2d')
 
 canvas.width = innerWidth
@@ -6,12 +6,11 @@ canvas.height = innerHeight
 
 const gravity = 1
 
-let avatarImage = new Image();
+let avatarImage = new Image()
 avatarImage.src = './public/img/alien.png'
 
-let platformImage = new Image();
+let platformImage = new Image()
 platformImage.src = './public/img/soloSpaceJet3d.png'
-
 
 let keys = {
   up: { pressed: false },
@@ -24,157 +23,149 @@ class Player {
   constructor() {
     this.position = {
       x: 100,
-      y: 100
+      y: 100,
     }
     this.velocity = {
       x: 0,
-      y: 0
+      y: 0,
     }
     this.width = 666
     this.height = 666
-    this.image = avatarImage 
+    this.image = avatarImage
   }
 
   draw() {
-    c.drawImage(this.image, this.position.x, this.position.y, this.width, this.height)
+    c.drawImage(this.image, 
+      this.position.x, this.position.y, 
+      this.width, this.height)
   }
 
   update() {
-    this.draw()
-    this.position.y += this.velocity.y
+    let prevX = this.position.x
+    let prevY = this.position.y
 
-    if (this.position.y + this.height + this.velocity.y <= canvas.height) {
+    if (keys.up.pressed) {
+      this.velocity.y -= 5
+    }
+    
+    if (keys.down.pressed) {
+      this.velocity.y += 5
+    }
+    
+    if (this.position.y + this.height < canvas.height) {
       this.velocity.y += gravity
     } else {
       this.velocity.y = 0
+    }
+
+    this.position.x += this.velocity.x
+    this.position.y += this.velocity.y
+
+    if (this.position.x < 0) {
+      this.position.x = 0
+    } else if (this.position.x + this.width > canvas.width) {
+      this.position.x = canvas.width - this.width
+    }
+
+    if (this.position.y < 0) {
+      this.position.y = 0
+    } else if (this.position.y + this.height > canvas.height) {
+      this.position.y = canvas.height - this.height
     }
   }
 }
 
 class Platform {
-  constructor({ x, y, image }) {
+  constructor(options) {
     this.position = {
-      x,
-      y
+      x: options.x,
+      y: options.y,
     }
-    this.image = image
-    this.width = image.width
-    this.height = image.height
+    this.width = options.width;
+    this.height = options.height;
+    this.image = new Image();
+    this.image.src = options.image;
   }
 
   draw() {
-    c.drawImage(this.image, this.position.x, this.position.y, this.width, this.height)
+    c.drawImage(this.image, this.position.x, this.position.y, this.width, this.height);
+  }
+
+  update() {
+    this.x -= 5;
   }
 }
 
+
 function init() {
-    let player = new Player()
-  
-    let platforms = [
-      new Platform({
-        x: 200,
-        y: 200,
-        image: platformImage
-      }),
-      new Platform({
-        x: platformImage.width - 3,
-        y: 270,
-        image: platformImage
-      }),
-      new Platform({
-        x: platformImage.width * 2 + 100,
-        y: 470,
-        image: platformImage
-      })
-    ]
-  
-    return { player, platforms } 
+  let platforms = [];
+  for (let i = 0; i < 5; i++) {
+    let x = canvas.width + Math.random() * canvas.width;
+    let y = canvas.height - 200 - Math.random() * 300;
+    let width = 200;
+    let height = 50;
+    let image = platformImage.src;
+    platforms.push(new Platform({ x, y, image, width, height }));
   }
+  let player = new Player();
+  return { player, platforms };
+}
 
-let { player, platforms } = init() 
+let { player, platforms } = init()
+animate(player, platforms)
 
-function animate() {
-  requestAnimationFrame(animate)
-  c.clearRect(0, 0, canvas.width, canvas.height)
+function animate(player, platforms) {
+  requestAnimationFrame(() => {
+    c.clearRect(0, 0, canvas.width, canvas.height);
+    player.update();
+    player.draw();
 
-  platforms.forEach((platform) => {
-    platform.draw()
-  })
+    platforms.forEach((platform) => {
+      platform.update();
+      platform.draw();
+    });
 
-  player.update()
+    animate(player, platforms);
+  });
+}
 
+const image = new Image();
+image.onload = function() {
   
-  if (keys.right.pressed) {
-    platforms.forEach((platform) => {
-      platform.position.x -= 5
-    })
-  } else if (keys.left.pressed) {
-    platforms.forEach((platform) => {
-      platform.position.x += 5
-    })
+};
+image.onerror = function() {
+  image.src = './public/soloSpaceJet3d.png';
+};
+
+const playerSpeed = 5;
+
+addEventListener('keydown', ({ code }) => {
+  switch (code) {
+    case 'ArrowUp':
+      player.velocity.y = -playerSpeed;
+      break;
+    case 'ArrowDown':
+      player.velocity.y = playerSpeed;
+      break;
+    case 'ArrowLeft':
+      player
+.velocity.x = -playerSpeed;
+      break;
+    case 'ArrowRight':
+      player.velocity.x = playerSpeed;
+      break;
   }
+});
 
- 
-  platforms.forEach((platform) => {
-    if (
-      player.position.y + player.height <= platform.position.y &&
-      player.position.y + player.height + player.velocity.y >= platform.position.y &&
-      player.position.x + player.width >= platform.position.x &&
-      player.position.x <= platform.position.x + platform.width
-    ) {
-      player.velocity.y = 0
-      player.position.y = platform.position.y - player.height
-    }
-  })
-
- 
-  if (platforms[2].position.x + platforms[2].width < 0) {
-    console.log('you win')}
-
-if (player.position.y > canvas.height) {
-    init()
-}}
-
-animate()
-
-addEventListener('keydown', ({ keyCode }) => {
-    switch (keyCode) {
-      case 38:
-        console.log('up')
-        keys.up.pressed = true
-        player.velocity.y -= 25
-        break
-      case 39:
-        console.log('right')
-        keys.right.pressed = true
-        player.velocity.x += 5 
-        break
-      case 37:
-        console.log('left')
-        keys.left.pressed = true
-        player.velocity.x -= 5 
-        break
-      case 40:
-        console.log('down')
-        keys.down.pressed = true
-        break
-    }
-  })
-  addEventListener('keyup', ({ keyCode }) => {
-    switch (keyCode) {
-      case 38:
-        player.velocity.y = 20
-        break
-      case 39:
-        player.velocity.x = 0 
-        break
-      case 37:
-        player.velocity.x = 0 
-        break
-      case 40:
-        keys.down.pressed = false
-        break
-    }
-  })
-  
-  
+addEventListener('keyup', ({ code }) => {
+  switch (code) {
+    case 'ArrowUp':
+    case 'ArrowDown':
+      player.velocity.y = 0;
+      break;
+    case 'ArrowLeft':
+    case 'ArrowRight':
+      player.velocity.x = 0;
+      break;
+  }
+});
